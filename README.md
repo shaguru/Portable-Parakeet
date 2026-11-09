@@ -16,6 +16,6 @@ On Windows, the bundled Parakeet command-line worker is launched with its consol
 
 Run `build_portable.ps1` on the development PC. It creates `dist\ParakeetDictation` and `ParakeetDictation-portable.zip`. The ZIP is published as a Release asset because GitHub rejects repository files over 100 MB.
 
-[Download the current portable build from GitHub](https://github.com/shaguru/Portable-Parakeet/releases/tag/v0.1.0).
+[Download the current portable build from GitHub](https://github.com/shaguru/Portable-Parakeet/releases/tag/v0.1.1).
 
 Extract the ZIP on the destination PC and launch `ParakeetDictation.exe`. Keep the extracted folder together. The package uses the CPU runtime for compatibility with computers that do not have NVIDIA drivers.

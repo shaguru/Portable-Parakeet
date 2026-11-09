@@ -8,7 +8,7 @@ Parakeet Dictation is a local Windows push-to-talk app. It records from your mic
 
 The app applies a conservative cleanup pass before pasting: standalone hesitation sounds such as “um”, “uh”, “uhm”, “erm”, and “hmm” are removed. It also removes clear filler “like” (for example, “Like, I think…”, “I was, like, thinking…”, or “I like don't know”). Preferences and comparisons such as “I like this” and “That thing is like this” are kept. Ambiguous uses are kept because plain transcripts cannot reliably convey intent or tone. Words containing those letters, such as “umbrella”, are left alone.
 
-When run from source, the model is discovered from Murmur's existing data in `%APPDATA%\com.bynhat.murmur`. The portable build carries its own model and native runtime beside the EXE, so the destination computer does not need Murmur, Python, administrator rights, or an internet connection.
+The source build carries the Parakeet model and native runtime in the local `models` folder. The portable build carries the same runtime beside the EXE, so the destination computer does not need Python, administrator rights, or an internet connection.
 
 On Windows, the bundled Parakeet command-line worker is launched with its console hidden, so dictation does not open a black command window.
 

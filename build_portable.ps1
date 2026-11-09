@@ -1,14 +1,17 @@
 $ErrorActionPreference = 'Stop'
 $projectRoot = $PSScriptRoot
-$modelSource = Join-Path $env:APPDATA 'com.bynhat.murmur\models'
+$modelSource = Join-Path $projectRoot 'models'
 $outputRoot = Join-Path $projectRoot 'dist\ParakeetDictation'
 
 if (-not (Test-Path -LiteralPath (Join-Path $modelSource 'parakeet-cli.exe'))) {
-    throw "Parakeet runtime not found in $modelSource"
+    throw "Parakeet runtime not found in the local models folder: $modelSource"
 }
 
 Push-Location $projectRoot
 try {
+    if (Test-Path -LiteralPath $outputRoot) {
+        Remove-Item -LiteralPath $outputRoot -Recurse -Force
+    }
     python -m PyInstaller --noconfirm --clean --windowed --onedir --name ParakeetDictation --collect-all sounddevice --collect-all _sounddevice_data parakeet_dictation.py
     if ($LASTEXITCODE -ne 0) { throw 'PyInstaller failed' }
 

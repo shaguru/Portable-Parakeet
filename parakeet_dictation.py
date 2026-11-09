@@ -1,4 +1,4 @@
-"""Local push-to-talk dictation using the Parakeet model bundled with Murmur.
+"""Local push-to-talk dictation using a Parakeet runtime beside this app.
 
 Hold Win+Alt to record; release either key to transcribe and paste at the caret.
 Run with: python parakeet_dictation.py
@@ -13,17 +13,8 @@ import sounddevice as sd
 import pyperclip
 
 ROOT = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else Path(__file__).resolve().parent
-APPDATA = Path(os.environ.get("APPDATA", Path.home() / "AppData/Roaming"))
-MURMUR = APPDATA / "com.bynhat.murmur"
-PORTABLE_MODELS = ROOT / "models"
-if (PORTABLE_MODELS / "parakeet-cli.exe").is_file() and (
-    PORTABLE_MODELS / "ggml-parakeet-tdt-0.6b-v2-q5_0.bin"
-).is_file():
-    MODEL_DIR = PORTABLE_MODELS
-    PREFS = ROOT / "preferences.json"
-else:
-    MODEL_DIR = MURMUR / "models"
-    PREFS = MURMUR / "preferences.json"
+MODEL_DIR = ROOT / "models"
+PREFS = ROOT / "preferences.json"
 MODEL = MODEL_DIR / "ggml-parakeet-tdt-0.6b-v2-q5_0.bin"
 CLI = MODEL_DIR / "parakeet-cli.exe"
 SAMPLE_RATE = 16000
@@ -117,7 +108,7 @@ def preferred_device():
                 return i
     except Exception:
         pass
-    # Murmur's selected device is normally the USB PnP Sound Device.
+    # Prefer a USB microphone when one is present; otherwise use the default.
     for i, d in enumerate(sd.query_devices()):
         if d["max_input_channels"] and "usb pnp" in d["name"].lower():
             return i

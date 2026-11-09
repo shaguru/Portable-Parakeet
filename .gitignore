@@ -3,4 +3,5 @@ build/
 dist/
 *.spec
 ParakeetDictation-portable.zip
+models/
 

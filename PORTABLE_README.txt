@@ -5,6 +5,9 @@ Parakeet Dictation - portable Windows build
 2. Double-click ParakeetDictation.exe. Keep the folder contents together.
 3. Click where you want text, hold Win + Alt, speak, then release either key.
 
+For recovery, run `ParakeetReboot.exe`. It also registers Ctrl + Alt + Shift + R
+as a global hotkey and keeps one Parakeet instance running.
+
 No installation, Python, administrator rights, or account is required.
 Speech is processed locally. The CPU runtime works without NVIDIA drivers.
 The model is about 428 MB; allow roughly 600 MB for the extracted folder.

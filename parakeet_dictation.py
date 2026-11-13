@@ -19,6 +19,18 @@ MODEL = MODEL_DIR / "ggml-parakeet-tdt-0.6b-v2-q5_0.bin"
 CLI = MODEL_DIR / "parakeet-cli.exe"
 SAMPLE_RATE = 16000
 
+# Prevent duplicate source or portable launches from competing for the global
+# hotkey and microphone. The handle stays alive for the lifetime of this
+# process, which keeps the named mutex owned.
+if os.name == "nt":
+    _kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    _kernel32.CreateMutexW.argtypes = [ctypes.c_void_p, ctypes.c_bool, ctypes.c_wchar_p]
+    _kernel32.CreateMutexW.restype = ctypes.c_void_p
+    _kernel32.GetLastError.restype = ctypes.c_ulong
+    _instance_mutex = _kernel32.CreateMutexW(None, True, "Local\\ParakeetDictation.SingleInstance")
+    if _kernel32.GetLastError() == 183:
+        raise SystemExit(0)
+
 _FINITE_VERBS = (
     r"(?:think|know|want|need|believe|feel|guess|remember|mean)s?"
     r"|thought|knew|wanted|needed|felt|am|is|are|was|were|have|has|had"
@@ -193,7 +205,8 @@ def run():
     status = tk.StringVar(value="Ready — hold Win+Alt to dictate")
     ttk.Label(root, text="Parakeet Dictation", font=("Segoe UI", 16, "bold")).pack(pady=(18, 4))
     ttk.Label(root, textvariable=status, wraplength=400).pack(pady=4)
-    ttk.Label(root, text="Hold Win + Alt, speak, then release either key. Text is pasted at the caret.", foreground="#555").pack(pady=8)
+    ttk.Label(root, text="Hold Win + Alt, speak, then release either key. Text is pasted at the caret.", foreground="#555").pack(pady=(8, 2))
+    ttk.Label(root, text="Recovery hotkey: Ctrl + Alt + Shift + R", foreground="#777").pack()
     d = Dictation(lambda s: root.after(0, status.set, s))
     active = False
     def poll_keys():

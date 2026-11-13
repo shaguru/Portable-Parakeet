@@ -2,6 +2,7 @@ __pycache__/
 build/
 dist/
 *.spec
-ParakeetDictation-portable.zip
+ParakeetDictation-portable*.zip
 models/
+release_staging_*/
 

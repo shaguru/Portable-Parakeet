@@ -12,8 +12,12 @@ try {
     if (Test-Path -LiteralPath $outputRoot) {
         Remove-Item -LiteralPath $outputRoot -Recurse -Force
     }
-    python -m PyInstaller --noconfirm --clean --windowed --onedir --name ParakeetDictation --collect-all sounddevice --collect-all _sounddevice_data parakeet_dictation.py
+    # PyInstaller's onedir target is dist\ParakeetDictation. Keep that folder
+    # as the portable root so its EXE and _internal files always match.
+    python -m PyInstaller --noconfirm --clean --windowed --onedir --name ParakeetDictation --workpath (Join-Path $projectRoot 'build\ParakeetDictation') --specpath (Join-Path $projectRoot 'build\spec') --collect-all sounddevice --collect-all _sounddevice_data parakeet_dictation.py
     if ($LASTEXITCODE -ne 0) { throw 'PyInstaller failed' }
+    python -m PyInstaller --noconfirm --clean --windowed --onefile --name ParakeetReboot --distpath $outputRoot --workpath (Join-Path $projectRoot 'build\ParakeetReboot') --specpath (Join-Path $projectRoot 'build\spec') parakeet_reboot.py
+    if ($LASTEXITCODE -ne 0) { throw 'PyInstaller supervisor build failed' }
 
     $modelTarget = Join-Path $outputRoot 'models'
     New-Item -ItemType Directory -Force -Path $modelTarget | Out-Null

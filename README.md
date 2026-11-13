@@ -6,7 +6,7 @@ Parakeet Dictation is a local Windows push-to-talk app. It records from your mic
 2. Hold **Win + Alt**, speak, and release either key.
 3. The transcription is pasted at the caret.
 
-The app enforces a single running instance. A background supervisor starts it at sign-in and watches **Ctrl + Alt + Shift + R** as a global recovery hotkey. Press that chord if the app is stuck or missing; the supervisor closes stale copies and starts one fresh copy.
+The app enforces a single running instance. A background supervisor starts it at sign-in, watches the app for unexpected exits, and watches **Ctrl + Alt + Shift + R** as a global recovery hotkey. Press that chord if the app is stuck or missing; the supervisor closes stale copies and starts one fresh copy.
 
 The app applies a conservative cleanup pass before pasting: standalone hesitation sounds such as “um”, “uh”, “uhm”, “erm”, and “hmm” are removed. It also removes clear filler “like” (for example, “Like, I think…”, “I was, like, thinking…”, or “I like don't know”). Preferences and comparisons such as “I like this” and “That thing is like this” are kept. Ambiguous uses are kept because plain transcripts cannot reliably convey intent or tone. Words containing those letters, such as “umbrella”, are left alone.
 

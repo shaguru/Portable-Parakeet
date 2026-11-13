@@ -6,7 +6,8 @@ Parakeet Dictation - portable Windows build
 3. Click where you want text, hold Win + Alt, speak, then release either key.
 
 For recovery, run `ParakeetReboot.exe`. It also registers Ctrl + Alt + Shift + R
-as a global hotkey and keeps one Parakeet instance running.
+as a global hotkey and keeps one Parakeet instance running. If the app exits,
+the supervisor starts it again automatically.
 
 No installation, Python, administrator rights, or account is required.
 Speech is processed locally. The CPU runtime works without NVIDIA drivers.

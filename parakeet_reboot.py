@@ -84,10 +84,32 @@ def start_app() -> None:
     subprocess.Popen(command, cwd=str(ROOT), **hide_console_kwargs())
 
 
+def app_is_running() -> bool:
+    """Return whether the one supervised dictation process is alive."""
+    for proc in psutil.process_iter(["pid", "name", "cmdline"]):
+        if is_app_process(proc):
+            return True
+    return False
+
+
+def start_and_wait() -> bool:
+    """Start the app and give Windows a moment to publish its process."""
+    try:
+        start_app()
+    except (OSError, subprocess.SubprocessError):
+        return False
+    deadline = time.monotonic() + 5.0
+    while time.monotonic() < deadline:
+        if app_is_running():
+            return True
+        time.sleep(0.1)
+    return app_is_running()
+
+
 def restart_app() -> None:
     stop_app_instances()
     time.sleep(0.35)
-    start_app()
+    start_and_wait()
 
 
 def hotkey_is_down() -> bool:
@@ -102,10 +124,17 @@ def main() -> int:
         return 1
     restart_app()
     previous = False
+    # If the app exits during login or crashes later, retry with a short
+    # backoff. The named mutex in the app still prevents duplicate launches.
+    next_watchdog_start = time.monotonic() + 2.0
     while True:
         current = hotkey_is_down()
         if current and not previous:
             restart_app()
+            next_watchdog_start = time.monotonic() + 2.0
+        elif not app_is_running() and time.monotonic() >= next_watchdog_start:
+            start_and_wait()
+            next_watchdog_start = time.monotonic() + 3.0
         previous = current
         time.sleep(0.03)
     return 0
